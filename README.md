@@ -24,8 +24,8 @@ Experimental Design:**
 * Annotation: Gencode vM13
 * Parameters: -t exon -g gene_id -p
 
-### 2. Quality Control ('QC_analysis.R')
 --------------------
+### 2. Quality Control ('QC_analysis.R')
 **Purpose:** Assess global data quality and sample relationships
 **Input:** FeatureCounts matrix (all 140 samples)
 
@@ -49,7 +49,7 @@ Experimental Design:**
 
 **Note:** 'dds_full' serves as the base dataset. For each differential expression contrast, samples are subset and DESeq2 is re-run on the subset to ensure proper dispersion estimates for that specific comparison
 
-
+--------------------
 ### 3. Differential Expression Analysis ('DE_analysis_DESeq2.R')
 **Purpose:** Identify differentially expressed genes across 23 contrasts
 **Input:** 
@@ -80,9 +80,8 @@ For each of 23 contrasts:
 -Genotype effects: KI vs WT (per tissue x sex x diet)
 -Diet effects: WD vs CD (per tissue x sex x genotype)
 
-
+-------------------
 ### 4. Plotting 
---------------
 * PCA
 * Venn diagrams
 * MA and volcano

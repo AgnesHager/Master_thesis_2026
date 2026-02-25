@@ -1,4 +1,4 @@
-#RNA-Seq Analysis: Adipose Slc7a10 KI Effects on Brain Transcriptome 
+# RNA-Seq Analysis: Adipose Slc7a10 KI Effects on Brain Transcriptome 
 ----------------------------
 Project Overview:
 ------------------------

@@ -15,6 +15,7 @@ Software & packages
 
 
 Scripts
+* DE_analysis_DESeq2.R
 
 
 

@@ -4,7 +4,7 @@ Project Overview:
 ------------------------
 Analysis of RNA-seq data from hypothalamic and brainstem regions (ARC, LC, VMH) in mice with adipose-specific Slc7a10 overexpression under Carbohydrate diet (CD) and Western diet (WD) conditions.
 
-Experimental Design:**
+Experimental Design:
 * 3 tissues (ARC, LC, VMH)
 * 2 sexes (Male/female)
 * 2 diets (CD, WD)
@@ -15,11 +15,11 @@ Experimental Design:**
 
 ### 1. Raw Data Processing (Performed by Genomics Core Facility)
 **Alignment:**
-* HISTA2 v2.2.2.1
+* HISAT2 v2.2.2.1
 * Reference: GRCm38.p5
 * Parameters: -p 140 --new-summary
 
-**Quantifications:**
+**Quantification:**
 * featureCounts
 * Annotation: Gencode vM13
 * Parameters: -t exon -g gene_id -p
@@ -27,27 +27,26 @@ Experimental Design:**
 --------------------
 ### 2. Quality Control ('QC_analysis.R')
 **Purpose:** Assess global data quality and sample relationships
-**Input:** FeatureCounts matrix (all 140 samples)
+**Input:** FeatureCounts matrix (all 140 samples, 'counts.txt')
 
 **Steps:**
-1. Remove problematic sampels ( mouse 600 (sick), test fragments)
-2. Global low-count filtering:'rowSums(counts >=10 >=5'
+1. Remove problematic samples ( mouse 600 (sick), test fragments)
+2. Global low-count filtering:'rowSums(counts >= 10) >=5'
        -Filters genes with <10 counts in <5 samples across all samples
        -Reduces genes from ~50,000 to 20,614 genes
-3. Create global DESeqqDataSet ('dds_full')
+3. Create global DESeqDataSet ('dds_full')
 4. VST transformation ('blind = TRUE') for visualization
 5. Global PCA analysis to assess:
        -Tissue separation (primary driver)
        -Sex effects (secondary driver)
        -Outlier detection
 
-**Input:** FeatureCounts matrix ('counts.txt')
 **Output:**
 -'dds_full': Filtered count matrix (20,614 genes x 140 samples)
 -'vsd_full': VST-transformed data for visualization
 -Global QC plots (PCAs, distance heatmaps)
 
-**Note:** 'dds_full' serves as the base dataset. For each differential expression contrast, samples are subset and DESeq2 is re-run on the subset to ensure proper dispersion estimates for that specific comparison
+**Note:** 'dds_full' is the base dataset. For each differential expression contrast, samples are subset and DESeq2 is re-run on the subset to ensure proper dispersion estimates for that specific comparison
 
 --------------------
 ### 3. Differential Expression Analysis ('DE_analysis_DESeq2.R')
@@ -64,7 +63,7 @@ Scripts
 * DE_analysis_DESeq2.R
 
 **Analysis Strategy:**
-For each of 23 contrasts:
+For each of 24 contrasts:
 1. **Subset samples** by tissue, sex and condition
 2. **Contrast-specific filtering**:
      -Calculate minimum group size (n_min)
@@ -73,10 +72,10 @@ For each of 23 contrasts:
 3. **Drop unused factor levels** with 'droplevels()'
 4. **Set reference level** (WT for genotype, CD for diet)
 5. **Run DESeq2** normalization and dispersion estimation
-6. **Extract results** and apply agepglm LFC shrinkage
-7. **Filter signficant DEGs**: padj < 0.05 AND |log2FC| >= 0.263
+6. **Extract results** and apply apeglm LFC shrinkage
+7. **Filter significant DEGs**: padj < 0.05 AND |log2FC| >= 0.263
 
-**Total Contrasts:** 23
+**Total Contrasts:** 24
 -Genotype effects: KI vs WT (per tissue x sex x diet)
 -Diet effects: WD vs CD (per tissue x sex x genotype)
 

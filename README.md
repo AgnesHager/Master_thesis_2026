@@ -50,13 +50,13 @@ Experimental Design:
 
 --------------------
 ### 3. Differential Expression Analysis ('DE_analysis_DESeq2.R')
-**Purpose:** Identify differentially expressed genes across 23 contrasts
+**Purpose:** Identify differentially expressed genes across 24 contrasts
 **Input:** 
 - Raw count matrix (after removing problematic samples and all-zero genes)
 - Metadata table
 
 Software & packages
-* DESeq/DESeq2
+* DESeq2
 
 
 Scripts
@@ -78,6 +78,15 @@ For each of 24 contrasts:
 **Total Contrasts:** 24
 -Genotype effects: KI vs WT (per tissue x sex x diet)
 -Diet effects: WD vs CD (per tissue x sex x genotype)
+
+**Gene Exclusions:**
+- Gt(ROSA)26Sor: Technical artifact (KI construct insertion site)
+- Adipoq: Technical artifact (KI promoter construct)
+
+**Output:**
+- `*_stats.csv`: All genes with statistics
+- `*_sig.csv`: Significant DEGs only
+
 
 -------------------
 ### 4. Plotting 

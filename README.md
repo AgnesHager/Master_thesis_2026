@@ -29,6 +29,9 @@ Experimental Design:
 **Purpose:** Assess global data quality and sample relationships
 **Input:** DESeqDataSet with all 150 samples ('dds_full'), including test fragments and different concentrations 
 
+Scripts
+*'QC_analysis.R'
+
 **Steps:**
 1. Define sample categories (Standard, Control, True_Low_Input, Large_Library, Low_RIN)
 2. VST transformation ('blind = TRUE') for visualization

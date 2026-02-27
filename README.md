@@ -90,9 +90,14 @@ For each of 24 contrasts:
 
 -------------------
 ### 4. Plotting 
+
+**Software & packages**
 * PCA
 * Venn diagrams
 * MA and volcano
 * Enrichment dotplots
+
+**Scripts**
+* pca_DESeq2.R
 
   

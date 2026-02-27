@@ -27,7 +27,10 @@ Experimental Design:
 --------------------
 ### 2. Quality Control ('QC_analysis.R')
 **Purpose:** Assess global data quality and sample relationships
-**Input:** FeatureCounts matrix (all 140 samples, 'counts.txt')
+**Input:** DESeqDataSet with all samples ('dds_full')
+
+**Steps:**
+1. Define sample categories (Standard, Control, True_Low_Input, Large_Library, Low_RIN
 
 **Steps:**
 1. Remove problematic samples ( mouse 600 (sick), test fragments)

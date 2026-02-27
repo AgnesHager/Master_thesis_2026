@@ -44,7 +44,7 @@ Experimental Design:
 **Output:**
 -'dds_full': Filtered count matrix (20,614 genes x 140 samples)
 -'vsd_full': VST-transformed data for visualization
--Global QC plots (PCAs, distance heatmaps)
+-Global QC plots (PCAs)
 
 **Note:** 'dds_full' is the base dataset. For each differential expression contrast, samples are subset and DESeq2 is re-run on the subset to ensure proper dispersion estimates for that specific comparison
 

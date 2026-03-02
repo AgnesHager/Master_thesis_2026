@@ -65,7 +65,7 @@ Scripts
 ### 3. Differential Expression Analysis ('DE_analysis_DESeq2.R')
 **Purpose:** Identify differentially expressed genes across 24 contrasts
 **Input:** 
-- Raw count matrix (after removing problematic samples and all-zero genes)
+- Raw count matrix (after removing test samples and mouse 600, and all-zero genes)
 - Metadata table
 
 Software & packages

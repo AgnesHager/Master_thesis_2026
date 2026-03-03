@@ -1,7 +1,7 @@
 # DE_analysis_DESeq2.R
 # Differential expression analysis for Slc7a10 KI RNA-seq data
-# This will give the output of 24 different contrasts
-
+# 24 contrasts total: 3 tissues x 2 sexes x 4 comparisons
+# (KI vs WT in CD, KI vs WT in WD, WD vs CD in WT, WD vs CD in KI)
 
 # LIBRARIES
 library("RNAseqQC")
@@ -106,6 +106,13 @@ dir.create("DEG_results", showWarnings = FALSE)
 dir.create("DEG_results/by_contrast", showWarnings = FALSE)
 dir.create("DEG_results/summaries", showWarnings = FALSE)
 
+
+# run_one_contrast function: Runs DESeq2 for one contrast (e.g. KI vs WT in ARC females on WD)
+# For each contrast it:
+# - Subsets to the relevant samples
+# - Filters lowly expressed genes based on group size
+# - Runs DESeq2 and applies apeglm shrinkage
+# - Returns significant DEGs (padj < 0.05, |log2FC| >= 0.263)
 run_one_contrast <- function(counts_tissue, meta_tissue,
                              subset_filter,
                              compare_factor,   # "Genotype" or "Diet"
@@ -113,26 +120,13 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
                              coef_suffix,      # "Genotype_KI_vs_WT" or "Diet_WD_vs_CD"
                              outfile_prefix,
                              lfc_threshold = 0.263,
-                             min_count = 10,
-                             harmonize_names = FALSE) {
+                             min_count = 10) {
 
   # 0) Subset metadata
   meta_sub <- meta_tissue %>% dplyr::filter(!! rlang::enquo(subset_filter))
   if (nrow(meta_sub) == 0) stop("No samples after filtering: ", deparse(substitute(subset_filter)))
 
-  # 1) Optional harmonization of sample IDs
-  if (harmonize_names) {
-    norm <- function(x) {
-      x %>%
-        gsub("\\s+", "", ., perl = TRUE) %>%
-        gsub("-", "_", ., fixed = TRUE) %>%
-        gsub("\\.bam$", "", ., perl = TRUE)
-    }
-    meta_sub$Sample         <- norm(meta_sub$Sample)
-    colnames(counts_tissue) <- norm(colnames(counts_tissue))
-  }
-
-  # 2) Integrity checks & subset counts
+  # 1) Integrity checks & subset counts
   if (anyDuplicated(meta_sub$Sample))
     stop("Duplicate Sample IDs in meta_sub: ", paste(unique(meta_sub$Sample[duplicated(meta_sub$Sample)]), collapse=", "))
   if (anyDuplicated(colnames(counts_tissue)))
@@ -145,7 +139,7 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
   counts_sub <- counts_tissue[, meta_sub$Sample, drop = FALSE]
   stopifnot(identical(colnames(counts_sub), meta_sub$Sample))
 
-  # 3) Drop unused factor levels
+  # 2) Drop unused factor levels
   meta_sub <- meta_sub %>%
     dplyr::mutate(
       Tissue   = droplevels(Tissue),
@@ -154,7 +148,7 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
       Genotype = droplevels(Genotype)
     )
 
-  # 4) Validate compare_factor
+  # 3) Validate compare_factor
   group_tab <- table(meta_sub[[compare_factor]])
   if (length(group_tab) != 2L) {
     stop("Need exactly two levels in ", compare_factor, "; got: ", paste(names(group_tab), collapse=", "))
@@ -164,21 +158,21 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
          paste(names(group_tab), group_tab, sep="=", collapse=", "))
   }
 
-  # 5) Relevel to reference
+  # 4) Relevel to reference
   meta_sub[[compare_factor]] <- stats::relevel(meta_sub[[compare_factor]], ref = ref_level)
 
-  # 6) Build DESeqDataSet
+  # 5) Build DESeqDataSet
   dds <- DESeq2::DESeqDataSetFromMatrix(countData = counts_sub,
                                         colData   = meta_sub,
                                         design    = stats::reformulate(compare_factor))
 
-  # 7) Pre-filter per contrast using smallest group size
+  # 6) Pre-filtering per contrast using the smallest group size (I think the smallest group size ends up being 5)
   filter_n <- min(group_tab)
   keep <- rowSums(DESeq2::counts(dds) >= min_count) >= filter_n
   dds  <- dds[keep, ]
   if (nrow(dds) < 100) warning("Very few genes after filtering (n=", nrow(dds), ").")
 
-  # 8) Fit and extract
+  # 7) Fit and extract
   dds <- DESeq2::DESeq(dds)
   rn  <- DESeq2::resultsNames(dds)
   if (!(coef_suffix %in% rn)) {
@@ -192,7 +186,7 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
   res_unshrunk <- DESeq2::results(dds, name = coef_suffix, alpha = 0.05)
   res_shrunk   <- DESeq2::lfcShrink(dds, coef = coef_suffix, type = "apeglm")
 
-  # 9) Format & annotate
+  # 8) Format & annotate
   df_un <- as.data.frame(res_unshrunk) %>%
     tibble::rownames_to_column("ensembl_gene_id")
   df_sh <- as.data.frame(res_shrunk) %>%
@@ -206,11 +200,11 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
   df_un <- df_un %>% dplyr::arrange(padj)
   df_sh <- df_sh %>% dplyr::arrange(padj)
 
-  # ---- 10) Significant DEGs (padj < 0.05 AND |log2FC| >= 0.263) ----
+  # 9) Significant DEGs (padj < 0.05 + |log2FC| >= 0.263)
   sig_sh <- df_sh %>%
     dplyr::filter(!is.na(padj), padj < 0.05, abs(log2FoldChange) >= lfc_threshold)
 
-  # 11) Write outputs 
+  # 10) Write outputs 
   readr::write_csv(df_un, file.path("DEG_results/by_contrast", paste0(outfile_prefix, "_stats_unshrunk.csv")))
   readr::write_csv(df_sh, file.path("DEG_results/by_contrast", paste0(outfile_prefix, "_stats_shrunk.csv")))
   readr::write_csv(sig_sh, file.path("DEG_results/by_contrast", paste0(outfile_prefix, "_sig_shrunk_lfc", lfc_threshold, ".csv")))
@@ -224,7 +218,7 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
   )
 }
 
-# 10) RUN ALL CONTRASTS
+# 11) RUN ALL CONTRASTS
 tissues <- c("ARC","LC","VMH")
 sexes   <- c("F","M")
 

@@ -33,7 +33,7 @@ pca_theme <- theme_bw() +
   )
 
 
-# 1) TECHNICAL ANNOTATION PCA (all 150 samples)
+# 1) TECHNICAL ANNOTATION PCA (all 150 samples), to check if they cluster away from the other "normal" samples
 # Defining sample categories
 control_samples <- c(
   "21_arc_S242",
@@ -81,6 +81,10 @@ qc_annotation$Sample_Category[qc_annotation$Sample %in% control_samples]        
 qc_annotation$Sample_Category[qc_annotation$Sample %in% true_low_input_samples] <- "True_Low_Input"
 qc_annotation$Sample_Category[qc_annotation$Sample %in% large_library_samples]  <- "Large_Library"
 qc_annotation$Sample_Category[qc_annotation$Sample %in% low_RIN_samples]        <- "Low_RIN"
+
+# Exclude test fragments for technical annotation PCA
+biological_samples <- colnames(dds_full)[!grepl("test", colnames(dds_full))]
+dds_bio <- dds_full[, biological_samples]
 
 colData(dds_bio)$Sample_Category <- qc_annotation[colnames(dds_bio), "Sample_Category"]
 

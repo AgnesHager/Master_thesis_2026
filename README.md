@@ -113,7 +113,7 @@ For each of 24 contrasts:
 * Enrichment dotplots
 
 **Scripts**
-* QC_analysis.R (PCA plots)
+* QC_control.R (PCA plots)
 * Plotting_DEGs.R
 
 

@@ -105,13 +105,16 @@ For each of 24 contrasts:
 -------------------
 ### 4. Plotting 
 
-**Software & packages**
+**Plot types**
 * PCA
+* Boxplots (individual DEG expression)
 * Venn diagrams
 * MA and volcano
 * Enrichment dotplots
 
 **Scripts**
-* pca_DESeq2.R
+* QC_analysis.R (PCA plots)
+* Plotting_DEGs.R
+
 
   

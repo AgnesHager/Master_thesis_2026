@@ -1,7 +1,9 @@
 # Plotting the DEGs to see the expression across the conditions
 
-# Save_plot function
-
+# Save_plot function: helper function to save plots as PDF with Arial font
+save_plot <- function(filename, width = 8, height = 6) {
+  cairo_pdf(filename, width = width, height = height, family = "Arial")
+}
 
 # Plotting the genes (DEGs), individually
 dds_ARC <- dds_full[, dds_full$Tissue == "ARC"]

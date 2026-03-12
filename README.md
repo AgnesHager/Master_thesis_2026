@@ -108,6 +108,7 @@ For each of 24 contrasts:
 **Plot types**
 * PCA
 * Boxplots (individual DEG expression)
+* Heatmap (DEGs)
 * Venn diagrams
 * MA and volcano
 * Enrichment dotplots
@@ -115,6 +116,7 @@ For each of 24 contrasts:
 **Scripts**
 * QC_control.R (PCA plots)
 * Plotting_DEGs.R
+* Heatmap_DEGs.R
 
 
   

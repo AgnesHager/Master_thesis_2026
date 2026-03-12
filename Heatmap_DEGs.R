@@ -29,7 +29,7 @@ pheatmap(
   scale             = "row",
   cluster_rows      = TRUE,
   cluster_cols      = TRUE,
-  show_colnames     = FALSE,
+  show_colnames     = TRUE,
   fontsize_row      = 10,
   color             = colorRampPalette(c("blue", "white", "red"))(100),
   main              = "Differentially expressed genes: ARC Males WD (KI vs WT)"

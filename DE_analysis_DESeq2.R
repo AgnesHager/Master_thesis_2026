@@ -1,5 +1,5 @@
 # DE_analysis_DESeq2.R
-# Differential expression analysis for Slc7a10 KI RNA-seq data
+# Differential expression analysis for GOI KI RNA-seq data
 # 24 contrasts total: 3 tissues x 2 sexes x 4 comparisons
 # (KI vs WT in CD, KI vs WT in WD, WD vs CD in WT, WD vs CD in KI)
 

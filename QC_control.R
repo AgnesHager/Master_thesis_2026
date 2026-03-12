@@ -1,5 +1,5 @@
 # QC_analysis.R
-# Quality control analysis for Slc7a10 KI RNA-seq data
+# Quality control analysis for GOI KI RNA-seq data
 
 # LIBRARIES
 library(DESeq2)

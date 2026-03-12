@@ -1,8 +1,8 @@
-# RNA-Seq Analysis: Adipose Slc7a10 KI Effects on Brain Transcriptome 
+# RNA-Seq Analysis: Adipose Gene Of Interest (GOI) KI Effects on Brain Transcriptome 
 ----------------------------
 Project Overview:
 ------------------------
-Analysis of RNA-seq data from hypothalamic and brainstem regions (ARC, LC, VMH) in mice with adipose-specific Slc7a10 overexpression under Carbohydrate diet (CD) and Western diet (WD) conditions.
+Analysis of RNA-seq data from hypothalamic and brainstem regions (ARC, LC, VMH) in mice with adipose-specific GOI overexpression under Carbohydrate diet (CD) and Western diet (WD) conditions.
 
 Experimental Design:
 * 3 tissues (ARC, LC, VMH)

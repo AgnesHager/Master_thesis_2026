@@ -103,7 +103,29 @@ For each of 24 contrasts:
 
 
 -------------------
-### 4. Plotting 
+## 4. Weighted Gene Co-expression Network Analysis (WGCNA)
+
+### Script
+`WGCNA_pipeline.R`
+
+### User parameters
+- TISSUE (ARC / LC / VMH)
+- SEX (M / F)
+- CONDITION (CD / WD)
+
+### Workflow
+
+1. Variance filtering (top 50% genes)
+2. Sample clustering QC
+3. Soft-threshold selection
+4. Network construction (blockwiseModules)
+5. Module eigengene calculation
+6. Module–trait correlation (bicor)
+7. Hub gene detection (kME + GS)
+8. Cytoscape export (top module)
+
+------------------
+### 5. Plotting 
 
 **Plot types**
 * PCA
@@ -111,12 +133,14 @@ For each of 24 contrasts:
 * Heatmap (DEGs)
 * Venn diagrams
 * MA and volcano
+* Module–trait heatmaps
 * Enrichment dotplots
 
 **Scripts**
 * QC_control.R (PCA plots)
 * Plotting_DEGs.R
 * Heatmap_DEGs.R
+* WGCNA.R
 
 
   

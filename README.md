@@ -125,6 +125,21 @@ For each of 24 contrasts:
 8. Cytoscape export (top module)
 
 ------------------
+### 6. Functional Enrichment Analysis (GO)
+
+Gene Ontology enrichment is performed on selected WGCNA modules using `clusterProfiler`.
+
+**Input:**
+- Module gene lists from WGCNA output
+
+**Analysis:**
+- enrichGO (Biological Process)
+- Multiple testing correction (BH)
+
+**Output:**
+- Dotplot visualizations
+
+----------------------------
 ### 5. Plotting 
 
 **Plot types**

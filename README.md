@@ -106,7 +106,7 @@ For each of 24 contrasts:
 ## 4. Weighted Gene Co-expression Network Analysis (WGCNA)
 
 ### Script
-`WGCNA_pipeline.R`
+`WGCNA.R`
 
 ### User parameters
 - TISSUE (ARC / LC / VMH)

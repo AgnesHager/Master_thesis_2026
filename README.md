@@ -1,4 +1,4 @@
-# RNA-Seq Analysis: Adipose Gene Of Interest (GOI) KI Effects on Brain Transcriptome 
+# RNA-Seq Analysis: Adipose Gene of Interest (GOI) KI Effects on Brain Transcriptome 
 ----------------------------
 Project Overview:
 ------------------------
@@ -15,7 +15,7 @@ Experimental Design:
 
 ### 1. Raw Data Processing (Performed by Genomics Core Facility)
 **Alignment:**
-* HISAT2 v2.2.2.1
+* HISAT2 v2.2.1
 * Reference: GRCm38.p5
 * Parameters: -p 140 --new-summary
 
@@ -125,7 +125,7 @@ For each of 24 contrasts:
 8. Cytoscape export (top module)
 
 ------------------
-### 6. Functional Enrichment Analysis (GO)
+### 6. Functional Enrichment Analysis (GO Overrepresentation Analysis on WGCNA Modules)
 
 Gene Ontology enrichment is performed on selected WGCNA modules using `clusterProfiler`.
 

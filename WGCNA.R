@@ -342,31 +342,3 @@ save(module_eigengenes, module.gene.mapping, traitData,
      geneModuleMembership, geneTraitSignificance,
      file = file.path(OUT_DIR, paste0(RUN_ID, "_networkConstruction.RData")))
 
-
-# STEP 13: Cytoscape export for top genotype module
-# Skip grey module since it contains unassigned genes that are not co-expressed 
-# Grey is excluded from network export as it has no real biological module structure: 
-# Source: Langfelder P, Luo R, Oldham MC, Horvath S. Is My Network Module Preserved and Reproducible? PLoS Comput Biol. 2011 Jan 20;7(1):e1001057. doi:10.1371/journal.pcbi.1001057 PubMed PMID: 21283776; PubMed Central PMCID: PMC3024255.
-top_color <- sub("^ME", "", genotype_hits$module[genotype_hits$module != "MEgrey"][1])
-cat("\nExporting top genotype module to Cytoscape:", top_color, "\n")
-
-inModule  <- bwnet$colors == top_color
-modProbes <- names(bwnet$colors)[inModule]
-
-mod.counts <- norm.counts[, modProbes]
-mod.TOM    <- TOMsimilarityFromExpr(
-  mod.counts,
-  power       = soft_power,
-  networkType = "signed hybrid"
-)
-dimnames(mod.TOM) <- list(modProbes, modProbes)
-
-exportNetworkToCytoscape(
-  mod.TOM,
-  edgeFile  = file.path(OUT_DIR, paste0("Cytoscape-edges-", top_color, ".txt")),
-  nodeFile  = file.path(OUT_DIR, paste0("Cytoscape-nodes-", top_color, ".txt")),
-  weighted  = TRUE,
-  threshold = 0.1,
-  nodeNames = modProbes,
-  nodeAttr  = bwnet$colors[inModule]
-)

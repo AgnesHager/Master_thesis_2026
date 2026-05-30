@@ -329,16 +329,3 @@ write.table(hub_genes,
             sep = "\t", row.names = FALSE, quote = FALSE)
 
 
-
-# STEP 12: Save gene -> module assignment
-module.gene.mapping <- as.data.frame(bwnet$colors)
-colnames(module.gene.mapping) <- "module"
-
-write.table(module.gene.mapping,
-            file = file.path(OUT_DIR, "gene2module.txt"),
-            sep = "\t", col.names = NA, quote = FALSE)
-
-save(module_eigengenes, module.gene.mapping, traitData,
-     geneModuleMembership, geneTraitSignificance,
-     file = file.path(OUT_DIR, paste0(RUN_ID, "_networkConstruction.RData")))
-

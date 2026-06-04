@@ -1,5 +1,5 @@
 # My DEG path, since I put them in another folder
-deg_path <- "C:/Users/agnes/OneDrive/BIOMEDISIN MASTER/SLC7A10_2025_Featurecounts/Master_project_Recode_05.02/DEGs_13.02/"
+deg_path <- "" 
 # Load DEGs
 degs_ARC_M_WD <- read.csv(paste0(deg_path, "ARC_M_KIvsWT_in_WD_sig_shrunk_lfc0.263_clean.csv"))
 

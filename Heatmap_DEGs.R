@@ -1,7 +1,7 @@
-# My DEG path, since I put them in another folder
+# Load the path where the DEGs were stored
 deg_path <- "" 
 # Load DEGs
-degs_ARC_M_WD <- read.csv(paste0(deg_path, "ARC_M_KIvsWT_in_WD_sig_shrunk_lfc0.263_clean.csv"))
+degs_ARC_M_WD <- read.csv(paste0(deg_path, "ARC_M_KIvsWT_in_WD_sig_shrunk_lfc0.263.csv"))
 
 # Extract ARC male samples
 meta_ARC     <- as.data.frame(colData(dds_ARC_filt))

@@ -166,7 +166,7 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
                                         colData   = meta_sub,
                                         design    = stats::reformulate(compare_factor))
 
-  # 6) Pre-filtering per contrast using the smallest group size (I think the smallest group size ends up being 5)
+  # 6) Pre-filtering per contrast using the smallest group size (The smallest group size ends up being 5)
   filter_n <- min(group_tab)
   keep <- rowSums(DESeq2::counts(dds) >= min_count) >= filter_n
   dds  <- dds[keep, ]
@@ -179,25 +179,16 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
     stop("Coefficient ", coef_suffix, " not found. Available: ", paste(rn, collapse=", "))
   }
 
-  if (!requireNamespace("apeglm", quietly = TRUE)) {
-    stop("Package 'apeglm' not installed. Install with BiocManager::install('apeglm') before running.")
-  }
-
-  res_unshrunk <- DESeq2::results(dds, name = coef_suffix, alpha = 0.05)
   res_shrunk   <- DESeq2::lfcShrink(dds, coef = coef_suffix, type = "apeglm")
 
   # 8) Format & annotate
-  df_un <- as.data.frame(res_unshrunk) %>%
-    tibble::rownames_to_column("ensembl_gene_id")
   df_sh <- as.data.frame(res_shrunk) %>%
     tibble::rownames_to_column("ensembl_gene_id")
 
   if (exists("gene_annot", inherits = TRUE)) {
-    df_un <- dplyr::left_join(df_un, gene_annot, by = "ensembl_gene_id")
     df_sh <- dplyr::left_join(df_sh, gene_annot, by = "ensembl_gene_id")
   }
 
-  df_un <- df_un %>% dplyr::arrange(padj)
   df_sh <- df_sh %>% dplyr::arrange(padj)
 
   # 9) Significant DEGs (padj < 0.05 + |log2FC| >= 0.263)
@@ -205,13 +196,11 @@ run_one_contrast <- function(counts_tissue, meta_tissue,
     dplyr::filter(!is.na(padj), padj < 0.05, abs(log2FoldChange) >= lfc_threshold)
 
   # 10) Write outputs 
-  readr::write_csv(df_un, file.path("DEG_results/by_contrast", paste0(outfile_prefix, "_stats_unshrunk.csv")))
   readr::write_csv(df_sh, file.path("DEG_results/by_contrast", paste0(outfile_prefix, "_stats_shrunk.csv")))
   readr::write_csv(sig_sh, file.path("DEG_results/by_contrast", paste0(outfile_prefix, "_sig_shrunk_lfc", lfc_threshold, ".csv")))
 
   list(
     dds        = dds,
-    unshrunk   = df_un,
     shrunk     = df_sh,
     sig_ids_up = sig_sh %>% dplyr::filter(log2FoldChange > 0) %>% dplyr::pull(ensembl_gene_id),
     sig_ids_dn = sig_sh %>% dplyr::filter(log2FoldChange < 0) %>% dplyr::pull(ensembl_gene_id)

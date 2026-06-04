@@ -1,14 +1,20 @@
 # My DEG path, since I put them in another folder
-deg_path <- "C:/Users/agnes/OneDrive/BIOMEDISIN MASTER/GOI_2025_Featurecounts/Master_project_Recode_05.02/DEGs_13.02/"
+deg_path <- "C:/Users/agnes/OneDrive/BIOMEDISIN MASTER/SLC7A10_2025_Featurecounts/Master_project_Recode_05.02/DEGs_13.02/"
 # Load DEGs
-degs_ARC_M_WD <- read.csv(paste0(deg_path, "DEGs_ARC_M_WD_KIvsWT_sig_clean.csv"))
+degs_ARC_M_WD <- read.csv(paste0(deg_path, "ARC_M_KIvsWT_in_WD_sig_shrunk_lfc0.263_clean.csv"))
 
-# Extract WD male samples
+# Extract ARC male samples
 meta_ARC     <- as.data.frame(colData(dds_ARC_filt))
 WD_M_samples <- rownames(meta_ARC[meta_ARC$Diet == "WD" & meta_ARC$Sex == "M", ])
 
 # Subset dds to WD males only and apply VST
 dds_ARC_M_WD <- dds_ARC_filt[, WD_M_samples]
+
+# Override the design to only Genotype, since Diet and Sex are constant in this subset
+design(dds_ARC_M_WD) <- ~ Genotype
+
+# Then re-estimate (needed before VST with blind=FALSE)
+dds_ARC_M_WD <- estimateSizeFactors(dds_ARC_M_WD)
 vsd_ARC_M_WD <- vst(dds_ARC_M_WD, blind = FALSE)
 
 # Extract expression for DEGs only
@@ -22,15 +28,19 @@ rownames(annotation_col) <- WD_M_samples
 ann_colors <- list(Genotype = c(WT = "darkorange", KI = "darkgreen"))
 
 # Plotting the heatmap
-pheatmap(
+ARC_M_KIvsWT <- pheatmap(
   expr_mat,
   annotation_col    = annotation_col,
   annotation_colors = ann_colors,
   scale             = "row",
   cluster_rows      = TRUE,
   cluster_cols      = TRUE,
-  show_colnames     = TRUE,
+  show_colnames     = FALSE,
   fontsize_row      = 10,
   color             = colorRampPalette(c("blue", "white", "red"))(100),
-  main              = "Differentially expressed genes: ARC Males WD (KI vs WT)"
+  main              = "ARC Males"
 )
+
+save_plot("DEGs_ARC_M_heatmap.pdf", width = 8, height = 7)
+print(ARC_M_KIvsWT)
+dev.off()

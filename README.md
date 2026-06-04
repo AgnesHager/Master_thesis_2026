@@ -62,7 +62,20 @@ Scripts
 **Note:** No samples were removed based on their QC metrics as all samples clustered correctly within their tissue groups. Only mouse 600 (sick) and test fragment samples were removed.  'dds_full' is the base dataset. For each differential expression contrast, samples are subset and DESeq2 is re-run on the subset to ensure proper dispersion estimates for that specific comparison
 
 --------------------
-### 3. Differential Expression Analysis ('DE_analysis_DESeq2.R')
+### 3. Tissue identity validation 
+Purpose: Confirm correct tissue dissection by checking known region-enriched marker 
+genes against DEG results, using VMH as reference tissue.
+
+Analysis Strategy:
+- Split dataset by sex
+- Set VMH as reference tissue
+- Run DESeq2 with ~Tissue design
+- Extract results for ARC vs VMH and LC vs VMH (padj < 0.05, |log2FC| > 0.263)
+- Convert  biology gene lists (ARC, VMH, LC) from literature to Ensembl IDs
+- Check overlap between significant DEGs and biology gene lists using intersect()
+
+--------------------
+### 4. Differential Expression Analysis ('DE_analysis_DESeq2.R')
 **Purpose:** Identify differentially expressed genes across 24 contrasts
 **Input:** 
 - Raw count matrix (after removing test samples and mouse 600, and all-zero genes)
@@ -103,7 +116,7 @@ For each of 24 contrasts:
 
 
 -------------------
-## 4. Weighted Gene Co-expression Network Analysis (WGCNA)
+## 5. Weighted Gene Co-expression Network Analysis (WGCNA)
 
 ### Script
 `WGCNA.R`
@@ -121,8 +134,6 @@ For each of 24 contrasts:
 4. Network construction (blockwiseModules)
 5. Module eigengene calculation
 6. Module–trait correlation (bicor)
-7. Hub gene detection (kME + GS)
-8. Cytoscape export (top module)
 
 ------------------
 ### 6. Functional Enrichment Analysis (GO Overrepresentation Analysis on WGCNA Modules)

@@ -33,20 +33,8 @@ pca_theme <- theme_bw() +
   )
 
 
-# 1) TECHNICAL ANNOTATION PCA (all 150 samples), to check if they cluster away from the other "normal" samples
+# 1) TECHNICAL ANNOTATION PCA, to check if they cluster away from the other "normal" samples
 # Defining sample categories
-control_samples <- c(
-  "21_arc_S242",
-  "21_arc_test100ng_S286",
-  "21_arc_test35ng_S289",
-  "21_arc_test65ng_S290",
-  "24_arc_S244",
-  "24_arc_test100ng_S288",
-  "24_arc_test35ng_S292",
-  "24_arc_test65ng_S291",
-  "24_arc_testFrag_S287"
-)
-
 true_low_input_samples <- c(
   "13_arc_S239",
   "29_arc_S247",
@@ -57,7 +45,6 @@ true_low_input_samples <- c(
 )
 
 large_library_samples <- c(
-  "24_arc_testFrag_S287",
   "11_vmh_S183",
   "45_vmh_S163"
 )
@@ -77,7 +64,6 @@ qc_annotation <- data.frame(
 )
 rownames(qc_annotation) <- qc_annotation$Sample
 
-qc_annotation$Sample_Category[qc_annotation$Sample %in% control_samples]        <- "Control"
 qc_annotation$Sample_Category[qc_annotation$Sample %in% true_low_input_samples] <- "True_Low_Input"
 qc_annotation$Sample_Category[qc_annotation$Sample %in% large_library_samples]  <- "Large_Library"
 qc_annotation$Sample_Category[qc_annotation$Sample %in% low_RIN_samples]        <- "Low_RIN"
@@ -106,7 +92,6 @@ ggplot(pca_data, aes(x = PC1, y = PC2, color = Tissue, shape = Sample_Category))
   scale_shape_manual(
     values = c(
       "Standard"       = 16,
-      "Control"        = 17,
       "True_Low_Input" = 15,
       "Large_Library"  = 18,
       "Low_RIN"        = 3
